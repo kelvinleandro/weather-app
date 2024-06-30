@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import { LinearGradient } from "expo-linear-gradient";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { DrawerRouteParamList } from "@/types/drawerRoute";
 import { Coordinate } from "@/types/location";
@@ -56,10 +57,14 @@ const HomeScreen = ({ navigation, route }: Props) => {
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      <Text style={styles.text}>Home screen</Text>
-      {weatherData && (
-        <Text style={styles.text}>{weatherData.location?.name}</Text>
-      )}
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
+          <Text style={styles.text}>Home screen</Text>
+          {weatherData && (
+            <Text style={styles.text}>{weatherData.location?.name}</Text>
+          )}
+        </ScrollView>
+      </SafeAreaView>
     </LinearGradient>
   );
 };

@@ -1,9 +1,10 @@
 import "react-native-gesture-handler";
-import { NavigationContainer } from "@react-navigation/native";
-import { LocationContextProvider } from "@/context/LocationContext";
-import * as Location from "expo-location";
-import DrawerRoute from "@/routes/drawer.route";
 import { useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import * as Location from "expo-location";
+import { LocationContextProvider } from "@/context/LocationContext";
+import DrawerRoute from "@/routes/drawer.route";
 
 export default function App() {
   useEffect(() => {
@@ -14,9 +15,11 @@ export default function App() {
 
   return (
     <LocationContextProvider>
-      <NavigationContainer>
-        <DrawerRoute />
-      </NavigationContainer>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <DrawerRoute />
+        </NavigationContainer>
+      </SafeAreaProvider>
     </LocationContextProvider>
   );
 }
