@@ -1,28 +1,31 @@
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { StyleSheet, Text, View, ScrollView, ActivityIndicator } from "react-native";
 import React, { useState, useEffect } from "react";
 import { DrawerScreenProps } from "@react-navigation/drawer";
+import { useHeaderHeight } from '@react-navigation/elements';
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import { DrawerRouteParamList } from "@/types/drawerRoute";
 import { Coordinate } from "@/types/geolocation";
 import { fetchForecast } from "@/api/weatherApi";
 import { useLocation } from "@/hooks/useLocation";
+import { ForecastResponse } from "@/types/weatherApi";
 
 type Props = DrawerScreenProps<DrawerRouteParamList, "Home">;
 
 const HomeScreen = ({ navigation, route }: Props) => {
+  const headerHeight = useHeaderHeight();
   const { activeCoordinate } = useLocation();
   const [coordinate, setCoordinate] = useState<Coordinate | null>(
     route.params?.coordinate || null
   );
-  const [weatherData, setWeatherData] = useState<any>(null);
+  const [weatherData, setWeatherData] = useState<ForecastResponse | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!route.params?.coordinate) {
       setCoordinate(activeCoordinate);
     }
-  }, []);
+  }, [route.params?.coordinate, activeCoordinate]);
 
   useEffect(() => {
     if (coordinate) {
@@ -33,16 +36,18 @@ const HomeScreen = ({ navigation, route }: Props) => {
           navigation.setOptions({ headerTitle: response.location.name });
         } catch (error) {
           console.log(error);
+        } finally {
+          setLoading(false);
         }
       };
       loadWeatherData();
     }
-  }, [coordinate]);
+  }, [coordinate, navigation]);
 
-  if (!coordinate) {
+  if (loading) {
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
   }
@@ -59,11 +64,18 @@ const HomeScreen = ({ navigation, route }: Props) => {
       style={styles.container}
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1 }}>
-          <Text style={styles.text}>Home screen</Text>
-          {weatherData && (
-            <Text style={styles.text}>{weatherData.location?.name}</Text>
-          )}
+        <ScrollView contentContainerStyle={[styles.scrollViewContent, {paddingTop: headerHeight}]}>
+          <View>
+            <Text style={styles.text}>{weatherData?.current.temp_c}°</Text>
+            <Text style={styles.text}>
+              {weatherData?.current.condition.text}
+            </Text>
+            <Text style={styles.text}>
+              {weatherData?.forecast.forecastday[0].day.maxtemp_c}° /{" "}
+              {weatherData?.forecast.forecastday[0].day.mintemp_c}° Feels like{" "}
+              {weatherData?.current.feelslike_c}°
+            </Text>
+          </View>
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -77,6 +89,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  scrollViewContent: {
+    flexGrow: 1,
   },
   text: {
     color: "white",
