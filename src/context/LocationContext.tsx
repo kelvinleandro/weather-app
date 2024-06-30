@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Location, Coordinate } from "@/types/location";
+import { City, Coordinate } from "@/types/geolocation";
 import {
   getCurrentPositionAsync,
   getForegroundPermissionsAsync,
@@ -9,8 +9,8 @@ import {
 export interface LocationContextType {
   activeCoordinate: Coordinate | null;
   setActiveCoordinate: React.Dispatch<React.SetStateAction<Coordinate | null>>;
-  favoritesLocation: Location[];
-  toggleFavoriteLocation: (location: Location) => void;
+  favoritesLocation: City[];
+  toggleFavoriteLocation: (location: City) => void;
 }
 
 export const LocationContext = createContext<LocationContextType | undefined>(
@@ -23,7 +23,7 @@ export const LocationContextProvider = ({
   children: ReactNode;
 }) => {
   const [activeCoordinate, setActiveCoordinate] = useState<Coordinate | null>(null);
-  const [favoritesLocation, setFavoritesLocation] = useState<Location[]>([]);
+  const [favoritesLocation, setFavoritesLocation] = useState<City[]>([]);
 
   useEffect(() => {
     const loadFavorites = async () => {
@@ -62,7 +62,7 @@ export const LocationContextProvider = ({
     loadActiveLocation();
   }, []);
 
-  const toggleFavoriteLocation = async (location: Location) => {
+  const toggleFavoriteLocation = async (location: City) => {
     let updatedFavorites;
 
     if (favoritesLocation.some((fav) => fav.city === location.city)) {

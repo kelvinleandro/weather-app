@@ -1,4 +1,5 @@
 import axios from "axios";
+import { AutoCompleteResponse, ForecastResponse } from "@/types/weatherApi";
 
 const weatherApi = axios.create({
   baseURL: "https://api.weatherapi.com/v1",
@@ -7,7 +8,7 @@ const weatherApi = axios.create({
   },
 });
 
-async function fetchAutocomplete(query: string) {
+async function fetchAutocomplete(query: string): Promise<AutoCompleteResponse> {
   try {
     const response = await weatherApi.get("/search.json", {
       params: { q: query },
@@ -19,7 +20,7 @@ async function fetchAutocomplete(query: string) {
   }
 }
 
-async function fetchForecast(lat: number, lon: number) {
+async function fetchForecast(lat: number, lon: number): Promise<ForecastResponse> {
   try {
     const response = await weatherApi.get("/forecast.json", {
       params: {
@@ -29,7 +30,6 @@ async function fetchForecast(lat: number, lon: number) {
         alerts: "no",
       },
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching forecast data:", error);

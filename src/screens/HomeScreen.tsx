@@ -5,7 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { DrawerRouteParamList } from "@/types/drawerRoute";
-import { Coordinate } from "@/types/location";
+import { Coordinate } from "@/types/geolocation";
 import { fetchForecast } from "@/api/weatherApi";
 import { useLocation } from "@/hooks/useLocation";
 
@@ -30,6 +30,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
         try {
           const response = await fetchForecast(coordinate.lat, coordinate.lon);
           setWeatherData(response);
+          navigation.setOptions({ headerTitle: response.location.name });
         } catch (error) {
           console.log(error);
         }

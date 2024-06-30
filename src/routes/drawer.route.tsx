@@ -10,12 +10,15 @@ const DrawerRoute = () => {
     <Drawer.Navigator
       initialRouteName="Home"
       screenOptions={{
-        headerTitle: "",
         headerTransparent: true,
         headerTintColor: "white",
       }}
     >
-      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerTitle: "" }}
+      />
       <Drawer.Screen name="Search" component={SearchScreen} />
     </Drawer.Navigator>
   );

@@ -3,8 +3,8 @@ interface Coordinate {
   lon: number;
 }
 
-interface Location extends Coordinate {
+interface City extends Coordinate {
   city: string;
 }
 
-export { Location, Coordinate };
+export { City, Coordinate };
