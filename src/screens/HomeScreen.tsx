@@ -1,9 +1,17 @@
-import { StyleSheet, Text, View, ScrollView, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { DrawerScreenProps } from "@react-navigation/drawer";
-import { useHeaderHeight } from '@react-navigation/elements';
+import { useHeaderHeight } from "@react-navigation/elements";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
+import LottieView from "lottie-react-native";
+
 import { DrawerRouteParamList } from "@/types/drawerRoute";
 import { Coordinate } from "@/types/geolocation";
 import { fetchForecast } from "@/api/weatherApi";
@@ -64,17 +72,31 @@ const HomeScreen = ({ navigation, route }: Props) => {
       style={styles.container}
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={[styles.scrollViewContent, {paddingTop: headerHeight}]}>
-          <View>
-            <Text style={styles.text}>{weatherData?.current.temp_c}°</Text>
-            <Text style={styles.text}>
-              {weatherData?.current.condition.text}
-            </Text>
-            <Text style={styles.text}>
-              {weatherData?.forecast.forecastday[0].day.maxtemp_c}° /{" "}
-              {weatherData?.forecast.forecastday[0].day.mintemp_c}° Feels like{" "}
-              {weatherData?.current.feelslike_c}°
-            </Text>
+        <ScrollView
+          contentContainerStyle={[
+            styles.scrollViewContent,
+            { paddingTop: headerHeight },
+          ]}
+        >
+          <View style={styles.mainSection}>
+            <View style={styles.currentInfo}>
+              <Text style={[styles.textColor, styles.currentTemperature]}>{weatherData?.current.temp_c}°</Text>
+              <Text style={[styles.textColor, styles.currentCondition]}>
+                {weatherData?.current.condition.text}
+              </Text>
+              <Text style={[styles.textColor, styles.minMaxTempText]}>
+                {weatherData?.forecast.forecastday[0].day.maxtemp_c}° /{" "}
+                {weatherData?.forecast.forecastday[0].day.mintemp_c}° Feels like{" "}
+                {weatherData?.current.feelslike_c}°
+              </Text>
+            </View>
+
+            <LottieView
+              autoPlay
+              loop
+              style={styles.animation}
+              source={require("@/assets/day_sunny.json")}
+            />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -92,8 +114,36 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     flexGrow: 1,
+    paddingHorizontal: 12,
   },
-  text: {
+  textColor: {
     color: "white",
+  },
+  currentTemperature: {
+    fontSize: 52,
+    fontWeight: 800,
+  },
+  currentCondition: {
+    fontSize: 24,
+    fontWeight: 600,
+  },
+  minMaxTempText: {
+    fontSize: 14,
+    fontWeight: 400,
+  },
+  mainSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 4,
+    width: "100%",
+  },
+  currentInfo: {
+    flex: 1,
+    gap: 4,
+  },
+  animation: {
+    width: 200,
+    height: 200,
   },
 });
