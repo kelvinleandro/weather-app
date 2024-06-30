@@ -17,6 +17,8 @@ import { Coordinate } from "@/types/geolocation";
 import { fetchForecast } from "@/api/weatherApi";
 import { useLocation } from "@/hooks/useLocation";
 import { ForecastResponse } from "@/types/weatherApi";
+import { BlurView } from "expo-blur";
+import HourlyForecastList from "@/Components/HourlyForecastList";
 
 type Props = DrawerScreenProps<DrawerRouteParamList, "Home">;
 
@@ -80,7 +82,9 @@ const HomeScreen = ({ navigation, route }: Props) => {
         >
           <View style={styles.mainSection}>
             <View style={styles.currentInfo}>
-              <Text style={[styles.textColor, styles.currentTemperature]}>{weatherData?.current.temp_c}°</Text>
+              <Text style={[styles.textColor, styles.currentTemperature]}>
+                {weatherData?.current.temp_c}°
+              </Text>
               <Text style={[styles.textColor, styles.currentCondition]}>
                 {weatherData?.current.condition.text}
               </Text>
@@ -98,6 +102,22 @@ const HomeScreen = ({ navigation, route }: Props) => {
               source={require("@/assets/day_sunny.json")}
             />
           </View>
+
+          <BlurView style={styles.hourlyForecastSection}>
+            <Text style={[styles.textColor, styles.hourlyTitle]}>
+              Hourly Forecast
+            </Text>
+            <View
+              style={{
+                width: "100%",
+                height: 1,
+                backgroundColor: "rgba(255, 255, 255, 0.4)",
+              }}
+            ></View>
+            <HourlyForecastList
+              data={weatherData?.forecast.forecastday[0].hour}
+            />
+          </BlurView>
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -120,7 +140,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   currentTemperature: {
-    fontSize: 52,
+    fontSize: 68,
     fontWeight: 800,
   },
   currentCondition: {
@@ -145,5 +165,17 @@ const styles = StyleSheet.create({
   animation: {
     width: 200,
     height: 200,
+  },
+  hourlyTitle: {
+    fontWeight: 600,
+    fontSize: 18,
+  },
+  hourlyForecastSection: {
+    width: "100%",
+    borderRadius: 20,
+    overflow: "hidden",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    gap: 8,
   },
 });

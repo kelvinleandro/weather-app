@@ -49,7 +49,7 @@ interface Astro {
   sunset: string;
 }
 
-interface Hourly {
+interface HourlyForecast {
   time: string;
   temp_c: number;
   temp_f: number;
@@ -63,7 +63,7 @@ interface ForecastDay {
   date: string;
   day: Day;
   astro: Astro;
-  hour: Hourly[];
+  hour: HourlyForecast[];
 }
 
 interface Forecast {
@@ -82,4 +82,4 @@ interface LocationData extends Omit<Location, "localtime"> {
 
 type AutoCompleteResponse = LocationData[];
 
-export { ForecastResponse, AutoCompleteResponse };
+export { ForecastResponse, AutoCompleteResponse, HourlyForecast };
