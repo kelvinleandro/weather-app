@@ -1,9 +1,9 @@
 import axios from "axios";
 
 const weatherApi = axios.create({
-  baseURL: "http://api.weatherapi.com/v1",
+  baseURL: "https://api.weatherapi.com/v1",
   params: {
-    key: process.env.WEATHER_API_KEY,
+    key: process.env.EXPO_PUBLIC_WEATHER_API_KEY,
   },
 });
 
@@ -24,9 +24,12 @@ async function fetchForecast(lat: number, lon: number) {
     const response = await weatherApi.get("/forecast.json", {
       params: {
         q: `${lat},${lon}`,
-        days: 5,
+        days: 1,
+        aqi: "no",
+        alerts: "no",
       },
     });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching forecast data:", error);

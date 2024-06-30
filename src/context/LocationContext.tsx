@@ -1,10 +1,14 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Location } from "types/location";
+import { Location, Coordinate } from "@/types/location";
+import {
+  getCurrentPositionAsync,
+  getForegroundPermissionsAsync,
+} from "expo-location";
 
 export interface LocationContextType {
-  activeLocation: Location | null;
-  setActiveLocation: React.Dispatch<React.SetStateAction<Location | null>>;
+  activeCoordinate: Coordinate | null;
+  setActiveCoordinate: React.Dispatch<React.SetStateAction<Coordinate | null>>;
   favoritesLocation: Location[];
   toggleFavoriteLocation: (location: Location) => void;
 }
@@ -18,7 +22,7 @@ export const LocationContextProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const [activeLocation, setActiveLocation] = useState<Location | null>(null);
+  const [activeCoordinate, setActiveCoordinate] = useState<Coordinate | null>(null);
   const [favoritesLocation, setFavoritesLocation] = useState<Location[]>([]);
 
   useEffect(() => {
@@ -34,6 +38,28 @@ export const LocationContextProvider = ({
     };
 
     loadFavorites();
+  }, []);
+
+  useEffect(() => {
+    const loadActiveLocation = async () => {
+      const { status } = await getForegroundPermissionsAsync();
+      if (status === "granted") {
+        const location = await getCurrentPositionAsync({});
+        setActiveCoordinate({
+          lat: location.coords.latitude,
+          lon: location.coords.longitude,
+        });
+      } else if (favoritesLocation.length > 0) {
+        setActiveCoordinate({
+          lat: favoritesLocation[0].lat,
+          lon: favoritesLocation[0].lon,
+        });
+      } else {
+        // London as default
+        setActiveCoordinate({ lat: 51.52, lon: -0.11 })
+      }
+    };
+    loadActiveLocation();
   }, []);
 
   const toggleFavoriteLocation = async (location: Location) => {
@@ -62,8 +88,8 @@ export const LocationContextProvider = ({
   };
 
   const value = {
-    activeLocation,
-    setActiveLocation,
+    activeCoordinate,
+    setActiveCoordinate,
     favoritesLocation,
     toggleFavoriteLocation,
   };

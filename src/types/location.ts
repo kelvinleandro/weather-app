@@ -1,7 +1,10 @@
-interface Location {
-  city: string;
+interface Coordinate {
   lat: number;
   lon: number;
 }
 
-export { Location };
+interface Location extends Coordinate {
+  city: string;
+}
+
+export { Location, Coordinate };

@@ -1,4 +1,4 @@
-import { LocationContext, LocationContextType } from "context/LocationContext";
+import { LocationContext, LocationContextType } from "@/context/LocationContext";
 import { useContext } from "react";
 
 export const useLocation = (): LocationContextType => {

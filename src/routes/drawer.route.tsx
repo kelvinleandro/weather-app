@@ -1,7 +1,7 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import HomeScreen from "screens/HomeScreen";
-import SearchScreen from "screens/SearchScreen";
-import { DrawerRouteParamList } from "types/drawerRoute";
+import HomeScreen from "@/screens/HomeScreen";
+import SearchScreen from "@/screens/SearchScreen";
+import { DrawerRouteParamList } from "@/types/drawerRoute";
 
 const Drawer = createDrawerNavigator<DrawerRouteParamList>();
 
@@ -12,6 +12,7 @@ const DrawerRoute = () => {
       screenOptions={{
         headerTitle: "",
         headerTransparent: true,
+        headerTintColor: "white",
       }}
     >
       <Drawer.Screen name="Home" component={HomeScreen} />

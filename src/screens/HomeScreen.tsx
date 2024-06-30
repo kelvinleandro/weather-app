@@ -1,30 +1,33 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { DrawerScreenProps } from "@react-navigation/drawer";
-import { DrawerRouteParamList } from "types/drawerRoute";
-import { Location } from "types/location";
-import { fetchForecast } from "api/weatherApi";
+import { LinearGradient } from "expo-linear-gradient";
+
+import { DrawerRouteParamList } from "@/types/drawerRoute";
+import { Coordinate } from "@/types/location";
+import { fetchForecast } from "@/api/weatherApi";
+import { useLocation } from "@/hooks/useLocation";
 
 type Props = DrawerScreenProps<DrawerRouteParamList, "Home">;
 
 const HomeScreen = ({ navigation, route }: Props) => {
-  const [location, setLocation] = useState<Location | null>(
-    route.params?.location || null
+  const { activeCoordinate } = useLocation();
+  const [coordinate, setCoordinate] = useState<Coordinate | null>(
+    route.params?.coordinate || null
   );
   const [weatherData, setWeatherData] = useState<any>(null);
 
   useEffect(() => {
-    if (!location) {
-      const defaultLocation = { city: "London", lat: 51.52, lon: -0.11 };
-      setLocation(defaultLocation);
+    if (!route.params?.coordinate) {
+      setCoordinate(activeCoordinate);
     }
-  }, [location]);
+  }, []);
 
   useEffect(() => {
-    if (location) {
+    if (coordinate) {
       const loadWeatherData = async () => {
         try {
-          const response = await fetchForecast(location.lat, location.lon);
+          const response = await fetchForecast(coordinate.lat, coordinate.lon);
           setWeatherData(response);
         } catch (error) {
           console.log(error);
@@ -32,9 +35,9 @@ const HomeScreen = ({ navigation, route }: Props) => {
       };
       loadWeatherData();
     }
-  }, [location]);
+  }, [coordinate]);
 
-  if (!location) {
+  if (!coordinate) {
     return (
       <View style={styles.container}>
         <Text>Loading...</Text>
@@ -43,10 +46,21 @@ const HomeScreen = ({ navigation, route }: Props) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text>{location.city}</Text>
-      {weatherData && <Text>{weatherData?.country}</Text>}
-    </View>
+    <LinearGradient
+      colors={
+        weatherData?.current?.is_day === 1
+          ? ["#5597e4", "#7cb0d3"]
+          : ["#303968", "#525E96"]
+      }
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
+      <Text style={styles.text}>Home screen</Text>
+      {weatherData && (
+        <Text style={styles.text}>{weatherData.location?.name}</Text>
+      )}
+    </LinearGradient>
   );
 };
 
@@ -57,5 +71,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  text: {
+    color: "white",
   },
 });

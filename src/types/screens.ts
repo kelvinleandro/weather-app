@@ -1,5 +1,5 @@
-import { Location } from "./location";
+import { Coordinate } from "./location";
 
 export interface HomeScreenProps {
-  location: Location;
+  coordinate: Coordinate;
 }
