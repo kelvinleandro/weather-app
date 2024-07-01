@@ -9,7 +9,6 @@ import React, { useState, useEffect } from "react";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { LinearGradient } from "expo-linear-gradient";
-import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
 
 import { DrawerRouteParamList } from "@/types/drawerRoute";
@@ -77,8 +76,8 @@ const HomeScreen = ({ navigation, route }: Props) => {
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      <SafeAreaView
-        style={[styles.safeArea, { paddingTop: headerHeight - 24 }]}
+      <View
+        style={[styles.safeArea, { paddingTop: headerHeight }]}
       >
         <ScrollView
           contentContainerStyle={styles.scrollViewContent}
@@ -136,7 +135,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
             <DailyForecastList data={weatherData?.forecast.forecastday} />
           </BlurView>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </LinearGradient>
   );
 };

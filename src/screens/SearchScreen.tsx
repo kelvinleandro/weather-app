@@ -1,20 +1,79 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { BlurView } from "expo-blur";
+import { useState } from "react";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { Ionicons } from "@expo/vector-icons";
+import { DrawerScreenProps } from "@react-navigation/drawer";
+import { DrawerRouteParamList } from "@/types/drawerRoute";
+import { fetchAutocomplete } from "@/api/weatherApi";
+import { AutoCompleteResponse } from "@/types/weatherApi";
 
-const SearchScreen = () => {
+type Props = DrawerScreenProps<DrawerRouteParamList, "Home">;
+
+const SearchScreen = ({ navigation, route }: Props) => {
+  const headerHeight = useHeaderHeight();
+  const [input, setInput] = useState("");
+  const [autocompleteResult, setAutocompleteResult] = useState<AutoCompleteResponse>([]);
+
+  const handleLocationPress = (lat: number, lon: number) => {
+    navigation.navigate("Home", { coordinate: { lat: lat, lon: lon } });
+  };
+
+  const handleTextChange = async (text: string) => {
+    setInput(text)
+    if (input.length > 2) {
+      const response = await fetchAutocomplete(text);
+      setAutocompleteResult(response);
+    } else {
+      setAutocompleteResult([])
+    }
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>SearchScreen</Text>
-    </View>
-  )
-}
+    <View style={[styles.container, { paddingTop: headerHeight }]}>
+      <BlurView intensity={50} style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Search for a city"
+          placeholderTextColor="#fff"
+          value={input}
+          onChangeText={text => handleTextChange(text)}
+        />
+        <Ionicons name="search" size={24} color="white" style={styles.icon} />
+      </BlurView>
 
-export default SearchScreen
+      {
+        autocompleteResult.map((item, index) => (
+          <Text key={index} style={{color: "white"}}>{item.name}, {item.country}</Text>
+        ))
+      }
+    </View>
+  );
+};
+
+export default SearchScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#303968",
+    paddingHorizontal: 12,
+  },
+  inputContainer: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-  }
-})
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 25,
+    paddingHorizontal: 15,
+    height: 50,
+    overflow: "hidden",
+  },
+  input: {
+    flex: 1,
+    color: "white",
+    fontSize: 16,
+  },
+  icon: {
+    marginLeft: 10,
+  },
+});

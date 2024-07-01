@@ -27,10 +27,10 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     >
       <View style={styles.screenNavigationContainer}>
         <TouchableOpacity onPress={() => props.navigation.navigate("Search")}>
-          <Ionicons name="search-sharp" size={24} color="white" />
+          <Ionicons name="search-sharp" size={28} color="white" />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Ionicons name="settings-sharp" size={24} color="white" />
+          <Ionicons name="settings-sharp" size={28} color="white" />
         </TouchableOpacity>
       </View>
 
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
-    gap: 4,
+    gap: 8,
     marginRight: 18,
     marginTop: 12,
   },
