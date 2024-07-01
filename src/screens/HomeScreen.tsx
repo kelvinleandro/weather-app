@@ -81,6 +81,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
                 lon: weatherData.location.lon,
               })
             }
+            style={{marginRight: 12}}
           >
             <Octicons
               name={
@@ -145,7 +146,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
             />
           </View>
 
-          <BlurView style={styles.blurContainer}>
+          <BlurView style={styles.blurContainer} intensity={30}>
             <Text style={[styles.textColor, styles.blurContainerTitle]}>
               Hourly Forecast
             </Text>
@@ -161,7 +162,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
             />
           </BlurView>
 
-          <BlurView style={styles.blurContainer}>
+          <BlurView style={styles.blurContainer} intensity={30}>
             <Text style={[styles.textColor, styles.blurContainerTitle]}>
               5-days Forecast
             </Text>
