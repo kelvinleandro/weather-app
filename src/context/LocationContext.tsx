@@ -13,6 +13,7 @@ export interface LocationContextType {
   userLocation: City | null;
   favoriteLocations: City[];
   toggleFavoriteLocation: (location: City) => void;
+  isFavorite: (location: City) => void;
 }
 
 export const LocationContext = createContext<LocationContextType | undefined>(
@@ -24,7 +25,9 @@ export const LocationContextProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const [activeCoordinate, setActiveCoordinate] = useState<Coordinate | null>(null);
+  const [activeCoordinate, setActiveCoordinate] = useState<Coordinate | null>(
+    null
+  );
   const [userLocation, setUserLocation] = useState<City | null>(null);
   const [favoriteLocations, setFavoriteLocations] = useState<City[]>([]);
 
@@ -53,12 +56,14 @@ export const LocationContextProvider = ({
           lat: location.coords.latitude,
           lon: location.coords.longitude,
         });
-        const autocompleteResponse = await fetchAutocomplete(`${location.coords.latitude},${location.coords.longitude}`);
+        const autocompleteResponse = await fetchAutocomplete(
+          `${location.coords.latitude},${location.coords.longitude}`
+        );
         setUserLocation({
           city: autocompleteResponse[0].name,
           lat: location.coords.latitude,
           lon: location.coords.longitude,
-        })
+        });
       } else if (favoriteLocations.length > 0) {
         setActiveCoordinate({
           lat: favoriteLocations[0].lat,
@@ -66,16 +71,20 @@ export const LocationContextProvider = ({
         });
       } else {
         // London as default
-        setActiveCoordinate({ lat: 51.52, lon: -0.11 })
+        setActiveCoordinate({ lat: 51.52, lon: -0.11 });
       }
     };
     loadActiveLocation();
   }, []);
 
+  const isFavorite = (location: City): boolean => {
+    return favoriteLocations.some((fav) => fav.city === location.city);
+  };
+
   const toggleFavoriteLocation = async (location: City) => {
     let updatedFavorites;
 
-    if (favoriteLocations.some((fav) => fav.city === location.city)) {
+    if (isFavorite(location)) {
       // Remove from favorites
       updatedFavorites = favoriteLocations.filter(
         (fav) => fav.city !== location.city
@@ -103,6 +112,7 @@ export const LocationContextProvider = ({
     favoriteLocations,
     toggleFavoriteLocation,
     userLocation,
+    isFavorite,
   };
 
   return (

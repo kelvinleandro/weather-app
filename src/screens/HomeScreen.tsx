@@ -4,6 +4,8 @@ import {
   View,
   ScrollView,
   ActivityIndicator,
+  TouchableOpacity,
+  Pressable,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { DrawerScreenProps } from "@react-navigation/drawer";
@@ -19,12 +21,18 @@ import { ForecastResponse } from "@/types/weatherApi";
 import { BlurView } from "expo-blur";
 import HourlyForecastList from "@/components/HourlyForecastList";
 import DailyForecastList from "@/components/DailyForecastList";
+import Octicons from "@expo/vector-icons/Octicons";
 
 type Props = DrawerScreenProps<DrawerRouteParamList, "Home">;
 
 const HomeScreen = ({ navigation, route }: Props) => {
   const headerHeight = useHeaderHeight();
-  const { activeCoordinate: coordinate, setActiveCoordinate } = useLocation();
+  const {
+    activeCoordinate: coordinate,
+    setActiveCoordinate,
+    favoriteLocations,
+    toggleFavoriteLocation,
+  } = useLocation();
   // const [coordinate, setCoordinate] = useState<Coordinate | null>(
   //   route.params?.coordinate || null
   // );
@@ -46,7 +54,32 @@ const HomeScreen = ({ navigation, route }: Props) => {
         try {
           const response = await fetchForecast(coordinate.lat, coordinate.lon);
           setWeatherData(response);
-          navigation.setOptions({ headerTitle: response.location.name });
+          navigation.setOptions({
+            headerTitle: response.location.name,
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() =>
+                  toggleFavoriteLocation({
+                    city: response.location.name,
+                    lat: response.location.lat,
+                    lon: response.location.lon,
+                  })
+                }
+              >
+                <Octicons
+                  name={
+                    favoriteLocations.some(
+                      (fav) => fav.city === response.location.name
+                    )
+                      ? "star-fill"
+                      : "star"
+                  }
+                  size={24}
+                  color="#ffc82e"
+                />
+              </TouchableOpacity>
+            ),
+          });
         } catch (error) {
           console.log(error);
         } finally {
@@ -55,7 +88,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
       };
       loadWeatherData();
     }
-  }, [coordinate, navigation]);
+  }, [coordinate, navigation, favoriteLocations, toggleFavoriteLocation]);
 
   if (loading) {
     return (
@@ -76,9 +109,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      <View
-        style={[styles.safeArea, { paddingTop: headerHeight }]}
-      >
+      <View style={[styles.safeArea, { paddingTop: headerHeight }]}>
         <ScrollView
           contentContainerStyle={styles.scrollViewContent}
           showsVerticalScrollIndicator={false}
@@ -104,7 +135,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
               source={require("@/assets/day_sunny.json")}
             />
           </View>
-          
+
           <BlurView style={styles.blurContainer}>
             <Text style={[styles.textColor, styles.blurContainerTitle]}>
               Hourly Forecast
