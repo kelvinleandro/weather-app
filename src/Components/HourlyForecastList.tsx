@@ -8,8 +8,7 @@ import {
 import React from "react";
 import { HourlyForecast } from "@/types/weatherApi";
 import { FlatList } from "react-native-gesture-handler";
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 type Props = {
   data: HourlyForecast[] | undefined;
@@ -24,12 +23,19 @@ const HourlyForecastList = ({ data }: Props) => {
 
     return (
       <View style={styles.itemContainer}>
-        <Text style={styles.textColor}>{time}</Text>
-        <Image source={{ uri: "https:" + item.condition.icon }} style={styles.weatherIcon} />
-        <Text style={styles.textColor}>{item.temp_c}°</Text>
+        <Text style={styles.textLight}>{time}</Text>
+        <Image
+          source={{ uri: "https:" + item.condition.icon }}
+          style={styles.weatherIcon}
+        />
+        <Text style={styles.textBold}>{item.temp_c}°</Text>
         <View style={styles.humiditySection}>
-          <FontAwesome6 name="droplet" size={14} color="rgba(255,255,255, 0.4)" />
-          <Text style={styles.textColor}>{item.humidity}%</Text>
+          <FontAwesome6
+            name="droplet"
+            size={14}
+            color="#cecece"
+          />
+          <Text style={styles.textLight}>{item.humidity}%</Text>
         </View>
       </View>
     );
@@ -40,7 +46,9 @@ const HourlyForecastList = ({ data }: Props) => {
       data={data}
       renderItem={renderItem}
       horizontal={true}
-      ListEmptyComponent={() => <Text style={styles.textColor}>No hourly forecast available</Text>}
+      ListEmptyComponent={() => (
+        <Text style={styles.textBold}>Hourly forecast unavailable</Text>
+      )}
       showsHorizontalScrollIndicator={false}
     />
   );
@@ -53,8 +61,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 4,
   },
-  textColor: {
+  textBold: {
     color: "white",
+    fontWeight: "800",
+    fontSize: 16,
+  },
+  textLight: {
+    color: "#cecece",
+    fontWeight: "400",
   },
   weatherIcon: {
     width: 64,
@@ -65,5 +79,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 2,
-  }
+  },
 });

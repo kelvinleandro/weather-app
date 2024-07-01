@@ -59,7 +59,7 @@ interface HourlyForecast {
   feelslike_f: number;
 }
 
-interface ForecastDay {
+interface DailyForecast {
   date: string;
   day: Day;
   astro: Astro;
@@ -67,7 +67,7 @@ interface ForecastDay {
 }
 
 interface Forecast {
-  forecastday: ForecastDay[];
+  forecastday: DailyForecast[];
 }
 
 interface ForecastResponse {
@@ -82,4 +82,4 @@ interface LocationData extends Omit<Location, "localtime"> {
 
 type AutoCompleteResponse = LocationData[];
 
-export { ForecastResponse, AutoCompleteResponse, HourlyForecast };
+export { ForecastResponse, AutoCompleteResponse, HourlyForecast, DailyForecast };

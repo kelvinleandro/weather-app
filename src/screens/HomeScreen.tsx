@@ -18,7 +18,8 @@ import { fetchForecast } from "@/api/weatherApi";
 import { useLocation } from "@/hooks/useLocation";
 import { ForecastResponse } from "@/types/weatherApi";
 import { BlurView } from "expo-blur";
-import HourlyForecastList from "@/Components/HourlyForecastList";
+import HourlyForecastList from "@/components/HourlyForecastList";
+import DailyForecastList from "@/components/DailyForecastList";
 
 type Props = DrawerScreenProps<DrawerRouteParamList, "Home">;
 
@@ -73,13 +74,8 @@ const HomeScreen = ({ navigation, route }: Props) => {
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView
-          contentContainerStyle={[
-            styles.scrollViewContent,
-            { paddingTop: headerHeight },
-          ]}
-        >
+      <SafeAreaView style={[styles.safeArea, {paddingTop: headerHeight - 24}]}>
+        <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
           <View style={styles.mainSection}>
             <View style={styles.currentInfo}>
               <Text style={[styles.textColor, styles.currentTemperature]}>
@@ -103,20 +99,34 @@ const HomeScreen = ({ navigation, route }: Props) => {
             />
           </View>
 
-          <BlurView style={styles.hourlyForecastSection}>
-            <Text style={[styles.textColor, styles.hourlyTitle]}>
+          <BlurView style={styles.blurContainer}>
+            <Text style={[styles.textColor, styles.blurContainerTitle]}>
               Hourly Forecast
             </Text>
             <View
               style={{
                 width: "100%",
                 height: 1,
-                backgroundColor: "rgba(255, 255, 255, 0.4)",
+                backgroundColor: "#cecece",
               }}
             ></View>
             <HourlyForecastList
               data={weatherData?.forecast.forecastday[0].hour}
             />
+          </BlurView>
+
+          <BlurView style={styles.blurContainer}>
+            <Text style={[styles.textColor, styles.blurContainerTitle]}>
+              5-days Forecast
+            </Text>
+            <View
+              style={{
+                width: "100%",
+                height: 1,
+                backgroundColor: "#cecece",
+              }}
+            ></View>
+            <DailyForecastList data={weatherData?.forecast.forecastday} />
           </BlurView>
         </ScrollView>
       </SafeAreaView>
@@ -132,15 +142,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  safeArea: {
+    flex: 1,
+    paddingBottom: 24,
+  },
   scrollViewContent: {
     flexGrow: 1,
     paddingHorizontal: 12,
+    gap: 18,
   },
   textColor: {
     color: "white",
   },
   currentTemperature: {
-    fontSize: 68,
+    fontSize: 48,
     fontWeight: 800,
   },
   currentCondition: {
@@ -166,16 +181,16 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
   },
-  hourlyTitle: {
+  blurContainerTitle: {
     fontWeight: 600,
     fontSize: 18,
   },
-  hourlyForecastSection: {
+  blurContainer: {
     width: "100%",
     borderRadius: 20,
     overflow: "hidden",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
     gap: 8,
   },
 });

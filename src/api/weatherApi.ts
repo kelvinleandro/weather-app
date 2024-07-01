@@ -25,7 +25,7 @@ async function fetchForecast(lat: number, lon: number): Promise<ForecastResponse
     const response = await weatherApi.get("/forecast.json", {
       params: {
         q: `${lat},${lon}`,
-        days: 1,
+        days: 5,
         aqi: "no",
         alerts: "no",
       },

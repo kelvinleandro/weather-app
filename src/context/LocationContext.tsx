@@ -5,6 +5,7 @@ import {
   getCurrentPositionAsync,
   getForegroundPermissionsAsync,
 } from "expo-location";
+import { fetchAutocomplete } from "@/api/weatherApi";
 
 export interface LocationContextType {
   activeCoordinate: Coordinate | null;
@@ -23,6 +24,7 @@ export const LocationContextProvider = ({
   children: ReactNode;
 }) => {
   const [activeCoordinate, setActiveCoordinate] = useState<Coordinate | null>(null);
+  const [userLocation, setUserLocation] = useState<City | null>(null);
   const [favoritesLocation, setFavoritesLocation] = useState<City[]>([]);
 
   useEffect(() => {
@@ -49,6 +51,12 @@ export const LocationContextProvider = ({
           lat: location.coords.latitude,
           lon: location.coords.longitude,
         });
+        const autocompleteResponse = await fetchAutocomplete(`${location.coords.latitude},${location.coords.longitude}`);
+        setUserLocation({
+          city: autocompleteResponse[0].name,
+          lat: location.coords.latitude,
+          lon: location.coords.longitude,
+        })
       } else if (favoritesLocation.length > 0) {
         setActiveCoordinate({
           lat: favoritesLocation[0].lat,
