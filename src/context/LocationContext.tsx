@@ -10,7 +10,8 @@ import { fetchAutocomplete } from "@/api/weatherApi";
 export interface LocationContextType {
   activeCoordinate: Coordinate | null;
   setActiveCoordinate: React.Dispatch<React.SetStateAction<Coordinate | null>>;
-  favoritesLocation: City[];
+  userLocation: City | null;
+  favoriteLocations: City[];
   toggleFavoriteLocation: (location: City) => void;
 }
 
@@ -25,14 +26,14 @@ export const LocationContextProvider = ({
 }) => {
   const [activeCoordinate, setActiveCoordinate] = useState<Coordinate | null>(null);
   const [userLocation, setUserLocation] = useState<City | null>(null);
-  const [favoritesLocation, setFavoritesLocation] = useState<City[]>([]);
+  const [favoriteLocations, setFavoriteLocations] = useState<City[]>([]);
 
   useEffect(() => {
     const loadFavorites = async () => {
       try {
-        const favorites = await AsyncStorage.getItem("favoritesLocation");
+        const favorites = await AsyncStorage.getItem("favoriteLocations");
         if (favorites) {
-          setFavoritesLocation(JSON.parse(favorites));
+          setFavoriteLocations(JSON.parse(favorites));
         }
       } catch (error) {
         console.error("Failed to load favorites from storage", error);
@@ -45,6 +46,7 @@ export const LocationContextProvider = ({
   useEffect(() => {
     const loadActiveLocation = async () => {
       const { status } = await getForegroundPermissionsAsync();
+      // select the location to display when the app starts
       if (status === "granted") {
         const location = await getCurrentPositionAsync({});
         setActiveCoordinate({
@@ -57,10 +59,10 @@ export const LocationContextProvider = ({
           lat: location.coords.latitude,
           lon: location.coords.longitude,
         })
-      } else if (favoritesLocation.length > 0) {
+      } else if (favoriteLocations.length > 0) {
         setActiveCoordinate({
-          lat: favoritesLocation[0].lat,
-          lon: favoritesLocation[0].lon,
+          lat: favoriteLocations[0].lat,
+          lon: favoriteLocations[0].lon,
         });
       } else {
         // London as default
@@ -73,21 +75,21 @@ export const LocationContextProvider = ({
   const toggleFavoriteLocation = async (location: City) => {
     let updatedFavorites;
 
-    if (favoritesLocation.some((fav) => fav.city === location.city)) {
+    if (favoriteLocations.some((fav) => fav.city === location.city)) {
       // Remove from favorites
-      updatedFavorites = favoritesLocation.filter(
+      updatedFavorites = favoriteLocations.filter(
         (fav) => fav.city !== location.city
       );
     } else {
       // Add to favorites
-      updatedFavorites = [...favoritesLocation, location];
+      updatedFavorites = [...favoriteLocations, location];
     }
 
-    setFavoritesLocation(updatedFavorites);
+    setFavoriteLocations(updatedFavorites);
 
     try {
       await AsyncStorage.setItem(
-        "favoritesLocation",
+        "favoriteLocations",
         JSON.stringify(updatedFavorites)
       );
     } catch (error) {
@@ -98,8 +100,9 @@ export const LocationContextProvider = ({
   const value = {
     activeCoordinate,
     setActiveCoordinate,
-    favoritesLocation,
+    favoriteLocations,
     toggleFavoriteLocation,
+    userLocation,
   };
 
   return (

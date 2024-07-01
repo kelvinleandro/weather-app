@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   textLight: {
-    color: "#cecece",
+    color: "white",
     fontWeight: "400",
   },
   weatherIcon: {

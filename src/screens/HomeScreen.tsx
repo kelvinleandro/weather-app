@@ -25,18 +25,21 @@ type Props = DrawerScreenProps<DrawerRouteParamList, "Home">;
 
 const HomeScreen = ({ navigation, route }: Props) => {
   const headerHeight = useHeaderHeight();
-  const { activeCoordinate } = useLocation();
-  const [coordinate, setCoordinate] = useState<Coordinate | null>(
-    route.params?.coordinate || null
-  );
+  const { activeCoordinate: coordinate, setActiveCoordinate } = useLocation();
+  // const [coordinate, setCoordinate] = useState<Coordinate | null>(
+  //   route.params?.coordinate || null
+  // );
   const [weatherData, setWeatherData] = useState<ForecastResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!route.params?.coordinate) {
-      setCoordinate(activeCoordinate);
+    if (route.params?.coordinate) {
+      setActiveCoordinate(route.params.coordinate);
     }
-  }, [route.params?.coordinate, activeCoordinate]);
+    // if (!route.params?.coordinate) {
+    //   setCoordinate(activeCoordinate);
+    // }
+  }, [route.params?.coordinate, coordinate]);
 
   useEffect(() => {
     if (coordinate) {
@@ -74,8 +77,13 @@ const HomeScreen = ({ navigation, route }: Props) => {
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      <SafeAreaView style={[styles.safeArea, {paddingTop: headerHeight - 24}]}>
-        <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
+      <SafeAreaView
+        style={[styles.safeArea, { paddingTop: headerHeight - 24 }]}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollViewContent}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.mainSection}>
             <View style={styles.currentInfo}>
               <Text style={[styles.textColor, styles.currentTemperature]}>
@@ -90,7 +98,6 @@ const HomeScreen = ({ navigation, route }: Props) => {
                 {weatherData?.current.feelslike_c}°
               </Text>
             </View>
-
             <LottieView
               autoPlay
               loop
@@ -98,7 +105,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
               source={require("@/assets/day_sunny.json")}
             />
           </View>
-
+          
           <BlurView style={styles.blurContainer}>
             <Text style={[styles.textColor, styles.blurContainerTitle]}>
               Hourly Forecast
