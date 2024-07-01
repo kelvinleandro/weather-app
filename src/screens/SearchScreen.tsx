@@ -7,27 +7,29 @@ import { DrawerScreenProps } from "@react-navigation/drawer";
 import { DrawerRouteParamList } from "@/types/drawerRoute";
 import { fetchAutocomplete } from "@/api/weatherApi";
 import { AutoCompleteResponse } from "@/types/weatherApi";
+import LocationButton from "@/components/LocationButton";
 
 type Props = DrawerScreenProps<DrawerRouteParamList, "Home">;
 
 const SearchScreen = ({ navigation, route }: Props) => {
   const headerHeight = useHeaderHeight();
   const [input, setInput] = useState("");
-  const [autocompleteResult, setAutocompleteResult] = useState<AutoCompleteResponse>([]);
+  const [autocompleteResult, setAutocompleteResult] =
+    useState<AutoCompleteResponse>([]);
 
   const handleLocationPress = (lat: number, lon: number) => {
     navigation.navigate("Home", { coordinate: { lat: lat, lon: lon } });
   };
 
   const handleTextChange = async (text: string) => {
-    setInput(text)
+    setInput(text);
     if (input.length > 2) {
       const response = await fetchAutocomplete(text);
       setAutocompleteResult(response);
     } else {
-      setAutocompleteResult([])
+      setAutocompleteResult([]);
     }
-  }
+  };
 
   return (
     <View style={[styles.container, { paddingTop: headerHeight }]}>
@@ -37,16 +39,18 @@ const SearchScreen = ({ navigation, route }: Props) => {
           placeholder="Search for a city"
           placeholderTextColor="#fff"
           value={input}
-          onChangeText={text => handleTextChange(text)}
+          onChangeText={(text) => handleTextChange(text)}
         />
         <Ionicons name="search" size={24} color="white" style={styles.icon} />
       </BlurView>
 
-      {
-        autocompleteResult.map((item, index) => (
-          <Text key={index} style={{color: "white"}}>{item.name}, {item.country}</Text>
-        ))
-      }
+      {autocompleteResult.map((item, index) => (
+        <LocationButton
+          key={index}
+          title={`${item.name}, ${item.country}`}
+          onPress={handleLocationPress.bind(this, item.lat, item.lon)}
+        />
+      ))}
     </View>
   );
 };
@@ -58,6 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#303968",
     paddingHorizontal: 12,
+    gap: 18,
   },
   inputContainer: {
     flexDirection: "row",

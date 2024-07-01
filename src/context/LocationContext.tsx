@@ -10,7 +10,7 @@ import { fetchAutocomplete } from "@/api/weatherApi";
 export interface LocationContextType {
   activeCoordinate: Coordinate | null;
   setActiveCoordinate: React.Dispatch<React.SetStateAction<Coordinate | null>>;
-  userLocation: City | null;
+  deviceLocation: City | null;
   favoriteLocations: City[];
   toggleFavoriteLocation: (location: City) => void;
   isFavorite: (location: City) => void;
@@ -28,7 +28,7 @@ export const LocationContextProvider = ({
   const [activeCoordinate, setActiveCoordinate] = useState<Coordinate | null>(
     null
   );
-  const [userLocation, setUserLocation] = useState<City | null>(null);
+  const [deviceLocation, setDeviceLocation] = useState<City | null>(null);
   const [favoriteLocations, setFavoriteLocations] = useState<City[]>([]);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export const LocationContextProvider = ({
         const autocompleteResponse = await fetchAutocomplete(
           `${location.coords.latitude},${location.coords.longitude}`
         );
-        setUserLocation({
+        setDeviceLocation({
           city: autocompleteResponse[0].name,
           lat: location.coords.latitude,
           lon: location.coords.longitude,
@@ -111,7 +111,7 @@ export const LocationContextProvider = ({
     setActiveCoordinate,
     favoriteLocations,
     toggleFavoriteLocation,
-    userLocation,
+    deviceLocation,
     isFavorite,
   };
 

@@ -56,29 +56,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
           setWeatherData(response);
           navigation.setOptions({
             headerTitle: response.location.name,
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={() =>
-                  toggleFavoriteLocation({
-                    city: response.location.name,
-                    lat: response.location.lat,
-                    lon: response.location.lon,
-                  })
-                }
-              >
-                <Octicons
-                  name={
-                    favoriteLocations.some(
-                      (fav) => fav.city === response.location.name
-                    )
-                      ? "star-fill"
-                      : "star"
-                  }
-                  size={24}
-                  color="#ffc82e"
-                />
-              </TouchableOpacity>
-            ),
+            
           });
         } catch (error) {
           console.log(error);
@@ -88,7 +66,38 @@ const HomeScreen = ({ navigation, route }: Props) => {
       };
       loadWeatherData();
     }
-  }, [coordinate, navigation, favoriteLocations, toggleFavoriteLocation]);
+  }, [coordinate, navigation]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        if (!weatherData) return;
+        return (
+          <TouchableOpacity
+            onPress={() =>
+              toggleFavoriteLocation({
+                city: weatherData.location.name,
+                lat: weatherData.location.lat,
+                lon: weatherData.location.lon,
+              })
+            }
+          >
+            <Octicons
+              name={
+                favoriteLocations.some(
+                  (fav) => fav.city === weatherData.location.name
+                )
+                  ? "star-fill"
+                  : "star"
+              }
+              size={24}
+              color="#ffc82e"
+            />
+          </TouchableOpacity>
+        );
+      },
+    });
+  }, [weatherData, navigation, favoriteLocations, toggleFavoriteLocation]);
 
   if (loading) {
     return (

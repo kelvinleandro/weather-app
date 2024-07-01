@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import {
   DrawerContentScrollView,
   DrawerContentComponentProps,
-  DrawerItemList,
 } from "@react-navigation/drawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -11,7 +10,7 @@ import LocationButton from "./LocationButton";
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const { top, bottom } = useSafeAreaInsets();
-  const { userLocation, favoriteLocations } = useLocation();
+  const { deviceLocation, favoriteLocations } = useLocation();
 
   const handleLocationPress = (lat: number, lon: number) => {
     props.navigation.navigate("Home", { coordinate: { lat: lat, lon: lon } });
@@ -34,13 +33,13 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         </TouchableOpacity>
       </View>
 
-      {userLocation && (
+      {deviceLocation && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Your location</Text>
           <LocationButton
-            title={userLocation.city}
+            title={deviceLocation.city}
             onPress={() =>
-              handleLocationPress(userLocation.lat, userLocation.lon)
+              handleLocationPress(deviceLocation.lat, deviceLocation.lon)
             }
           />
         </View>
@@ -56,7 +55,6 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           <Text style={{color: "white"}}>You don't have any favorite locations saved</Text>
         }
       </View>
-      <DrawerItemList {...props} />
     </DrawerContentScrollView>
   );
 };
