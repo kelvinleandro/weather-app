@@ -1,7 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import useSettings from '@/hooks/useSettings'
+import { useHeaderHeight } from '@react-navigation/elements';
 
 const SettingsScreen = () => {
+  const headerHeight = useHeaderHeight();
   const { settings, saveSettings } = useSettings();
 
   const handleValueChange = (field: string, value: string) => {
@@ -10,8 +12,10 @@ const SettingsScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>SettingsScreen</Text>
+    <View style={[styles.container, {paddingTop: headerHeight}]}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollview}>
+        <Text style={styles.text}>SettingsScreen</Text>
+      </ScrollView>
     </View>
   )
 }
@@ -23,7 +27,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#303968",
     paddingHorizontal: 12,
-    gap: 18,
+  },
+  scrollview: {
+    flex: 1,
   },
   text: {
     color: "#fff",
