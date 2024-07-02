@@ -9,7 +9,7 @@ import { fetchAutocomplete } from "@/api/weatherApi";
 import { AutoCompleteResponse } from "@/types/weatherApi";
 import LocationButton from "@/components/LocationButton";
 
-type Props = DrawerScreenProps<DrawerRouteParamList, "Home">;
+type Props = DrawerScreenProps<DrawerRouteParamList, "Search">;
 
 const SearchScreen = ({ navigation, route }: Props) => {
   const headerHeight = useHeaderHeight();

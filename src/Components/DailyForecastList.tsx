@@ -1,9 +1,4 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { DailyForecast } from "@/types/weatherApi";
 import { getWeekday, isToday } from "@/utils";
@@ -18,24 +13,29 @@ const DailyForecastList = ({ data }: Props) => {
       {data && data.length > 0 ? (
         data.map((item) => (
           <View key={item.date} style={styles.itemContainer}>
-            <Text style={styles.text}>
+            <Text style={[styles.text, { flex: 1 }]}>
               {isToday(item.date) ? "Today" : getWeekday(item.date)}
             </Text>
-            <View style={styles.humiditySection}>
-              <FontAwesome6
-                name="droplet"
-                size={14}
-                color="#cecece"
-              />
-              <Text style={styles.textHumidity}>{item.day.avghumidity}%</Text>
-              <Image
-                source={{ uri: "https:" + item.day.condition.icon }}
-                style={styles.weatherIcon}
-              />
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flex: 2,
+              }}
+            >
+              <View style={styles.humiditySection}>
+                <FontAwesome6 name="droplet" size={14} color="#cecece" />
+                <Text style={styles.textHumidity}>{item.day.avghumidity}%</Text>
+                <Image
+                  source={{ uri: "https:" + item.day.condition.icon }}
+                  style={styles.weatherIcon}
+                />
+              </View>
+              <Text style={styles.textHumidity}>
+                {item.day.maxtemp_c}° / {item.day.mintemp_c}°
+              </Text>
             </View>
-            <Text style={styles.textHumidity}>
-              {item.day.maxtemp_c}° / {item.day.mintemp_c}°
-            </Text>
           </View>
         ))
       ) : (
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
   humiditySection: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-start",
     gap: 2,
   },
 });

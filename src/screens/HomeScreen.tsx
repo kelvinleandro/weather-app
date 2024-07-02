@@ -22,6 +22,7 @@ import { BlurView } from "expo-blur";
 import HourlyForecastList from "@/components/HourlyForecastList";
 import DailyForecastList from "@/components/DailyForecastList";
 import Octicons from "@expo/vector-icons/Octicons";
+import Loader from "@/components/Loader";
 
 type Props = DrawerScreenProps<DrawerRouteParamList, "Home">;
 
@@ -111,9 +112,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
+      <Loader />
     );
   }
 
@@ -206,6 +205,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#303968",
   },
   safeArea: {
     flex: 1,

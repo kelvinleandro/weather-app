@@ -1,6 +1,7 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeScreen from "@/screens/HomeScreen";
 import SearchScreen from "@/screens/SearchScreen";
+import SettingsScreen from "@/screens/SettingsScreen";
 import { DrawerRouteParamList } from "@/types/drawerRoute";
 import CustomDrawerContent from "@/components/CustomDrawerContent";
 
@@ -27,6 +28,7 @@ const DrawerRoute = () => {
         component={HomeScreen}
         options={{ headerTitle: "" }}
       />
+      <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="Search" component={SearchScreen} />
     </Drawer.Navigator>
   );

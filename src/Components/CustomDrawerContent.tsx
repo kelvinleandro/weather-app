@@ -7,6 +7,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocation } from "@/hooks/useLocation";
 import LocationButton from "./LocationButton";
+import { CommonActions } from "@react-navigation/native";
+import { DrawerRouteParamList } from "@/types/drawerRoute";
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const { top, bottom } = useSafeAreaInsets();
@@ -14,6 +16,15 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
   const handleLocationPress = (lat: number, lon: number) => {
     props.navigation.navigate("Home", { coordinate: { lat: lat, lon: lon } });
+  };
+
+  const handleScreenResetAndNavigate = (screenName: keyof DrawerRouteParamList) => {
+    props.navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: screenName }],
+      })
+    );
   };
 
   return (
@@ -25,10 +36,10 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       ]}
     >
       <View style={styles.screenNavigationContainer}>
-        <TouchableOpacity onPress={() => props.navigation.navigate("Search")}>
+        <TouchableOpacity onPress={() => handleScreenResetAndNavigate("Search")}>
           <Ionicons name="search-sharp" size={28} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => handleScreenResetAndNavigate("Settings")}>
           <Ionicons name="settings-sharp" size={28} color="white" />
         </TouchableOpacity>
       </View>
