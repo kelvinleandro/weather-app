@@ -31,6 +31,7 @@ interface Current {
   heatindex_f: number;
   dewpoint_c: number;
   dewpoint_f: number;
+  uv: number;
 }
 
 interface Day {
