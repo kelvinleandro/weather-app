@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import { BlurView } from "expo-blur";
 import { useState } from "react";
 import { useHeaderHeight } from "@react-navigation/elements";

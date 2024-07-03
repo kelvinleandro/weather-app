@@ -1,13 +1,15 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { DailyForecast } from "@/types/weatherApi";
-import { getWeekday, isToday } from "@/utils";
+import { getWeekday, isToday } from "@/utils/datetime";
+import useSettings from "@/hooks/useSettings";
 
 type Props = {
   data: DailyForecast[] | undefined;
 };
 
 const DailyForecastList = ({ data }: Props) => {
+  const { settings } = useSettings();
   return (
     <View style={{ flex: 1 }}>
       {data && data.length > 0 ? (
@@ -26,14 +28,16 @@ const DailyForecastList = ({ data }: Props) => {
             >
               <View style={styles.humiditySection}>
                 <FontAwesome6 name="droplet" size={14} color="#cecece" />
-                <Text style={styles.textHumidity}>{item.day.avghumidity}%</Text>
+                <Text style={styles.textLight}>{item.day.avghumidity}%</Text>
                 <Image
                   source={{ uri: "https:" + item.day.condition.icon }}
                   style={styles.weatherIcon}
                 />
               </View>
-              <Text style={styles.textHumidity}>
-                {item.day.maxtemp_c}° / {item.day.mintemp_c}°
+              <Text style={styles.textLight}>
+                {settings.temperatureUnit === "fahrenheit"
+                  ? `${item.day.maxtemp_f}° / ${item.day.mintemp_f}°`
+                  : `${item.day.maxtemp_c}° / ${item.day.maxtemp_c}°`}
               </Text>
             </View>
           </View>
@@ -59,7 +63,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     fontSize: 16,
   },
-  textHumidity: {
+  textLight: {
     color: "white",
     fontWeight: "400",
   },

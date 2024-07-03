@@ -9,12 +9,15 @@ import React from "react";
 import { HourlyForecast } from "@/types/weatherApi";
 import { FlatList } from "react-native-gesture-handler";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import useSettings from "@/hooks/useSettings";
 
 type Props = {
   data: HourlyForecast[] | undefined;
 };
 
 const HourlyForecastList = ({ data }: Props) => {
+  const { settings } = useSettings();
+
   const renderItem = ({ item }: ListRenderItemInfo<HourlyForecast>) => {
     const date = new Date(item.time);
     const hours = String(date.getHours()).padStart(2, "0");
@@ -28,13 +31,14 @@ const HourlyForecastList = ({ data }: Props) => {
           source={{ uri: "https:" + item.condition.icon }}
           style={styles.weatherIcon}
         />
-        <Text style={styles.textBold}>{item.temp_c}°</Text>
+        <Text style={styles.textBold}>
+          {settings.temperatureUnit === "fahrenheit"
+            ? item.temp_f
+            : item.temp_c}
+          °
+        </Text>
         <View style={styles.humiditySection}>
-          <FontAwesome6
-            name="droplet"
-            size={14}
-            color="#cecece"
-          />
+          <FontAwesome6 name="droplet" size={14} color="#cecece" />
           <Text style={styles.textLight}>{item.humidity}%</Text>
         </View>
       </View>

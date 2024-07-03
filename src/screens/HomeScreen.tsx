@@ -3,14 +3,14 @@ import {
   Text,
   View,
   ScrollView,
-  ActivityIndicator,
   TouchableOpacity,
-  Pressable,
 } from "react-native";
 import { useState, useEffect, useMemo } from "react";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { LinearGradient } from "expo-linear-gradient";
+import { BlurView } from "expo-blur";
+import Octicons from "@expo/vector-icons/Octicons";
 import LottieView from "lottie-react-native";
 
 import { DrawerRouteParamList } from "@/types/drawerRoute";
@@ -18,16 +18,16 @@ import { Coordinate } from "@/types/geolocation";
 import { fetchForecast } from "@/api/weatherApi";
 import { useLocation } from "@/hooks/useLocation";
 import { ForecastResponse } from "@/types/weatherApi";
-import { BlurView } from "expo-blur";
 import HourlyForecastList from "@/components/HourlyForecastList";
 import DailyForecastList from "@/components/DailyForecastList";
-import Octicons from "@expo/vector-icons/Octicons";
 import Loader from "@/components/Loader";
+import useSettings from "@/hooks/useSettings";
 
 type Props = DrawerScreenProps<DrawerRouteParamList, "Home">;
 
 const HomeScreen = ({ navigation, route }: Props) => {
   const headerHeight = useHeaderHeight();
+  const { settings } = useSettings();
   const {
     activeCoordinate: coordinate,
     setActiveCoordinate,
@@ -41,14 +41,30 @@ const HomeScreen = ({ navigation, route }: Props) => {
   const [loading, setLoading] = useState(true);
   const moreWeatherInfo = useMemo(() => {
     return {
-      Wind: `${weatherData?.current.wind_kph ?? "N/A"} km/h`,
-      Pressure: `${weatherData?.current.pressure_mb ?? "N/A"} mb`,
-      Precipitation: `${weatherData?.current.precip_mm ?? "N/A"} mm`,
+      Wind: `${
+        settings.windUnit === "mph"
+          ? weatherData?.current.wind_mph ?? "N/A"
+          : weatherData?.current.wind_kph ?? "N/A"
+      } ${settings.windUnit}`,
+      Pressure: `${
+        settings.pressureUnit === "in"
+          ? weatherData?.current.pressure_in ?? "N/A"
+          : weatherData?.current.pressure_mb ?? "N/A"
+      } ${settings.pressureUnit}`,
+      Precipitation: `${
+        settings.precipitationUnit === "in"
+          ? weatherData?.current.precip_in ?? "N/A"
+          : weatherData?.current.precip_mm ?? "N/A"
+      } ${settings.precipitationUnit}`,
       Humidity: `${weatherData?.current.humidity ?? "N/A"} %`,
-      "Dew Point": `${weatherData?.current.dewpoint_c ?? "N/A"} °C`,
+      "Dew Point": `${
+        settings.temperatureUnit === "fahrenheit"
+          ? weatherData?.current.dewpoint_f ?? "N/A"
+          : weatherData?.current.dewpoint_c ?? "N/A"
+      }°`,
       "UV Index": `${weatherData?.current.uv ?? "N/A"}`,
     };
-  }, [weatherData]);
+  }, [weatherData, settings]);
 
   useEffect(() => {
     if (route.params?.coordinate) {
@@ -111,9 +127,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
   }, [weatherData, navigation, favoriteLocations, toggleFavoriteLocation]);
 
   if (loading) {
-    return (
-      <Loader />
-    );
+    return <Loader />;
   }
 
   return (
@@ -135,15 +149,23 @@ const HomeScreen = ({ navigation, route }: Props) => {
           <View style={styles.mainSection}>
             <View style={styles.currentInfo}>
               <Text style={[styles.textColor, styles.currentTemperature]}>
-                {weatherData?.current.temp_c}°
+                {settings.temperatureUnit === "fahrenheit"
+                  ? weatherData?.current.temp_f
+                  : weatherData?.current.temp_c}
+                °
               </Text>
               <Text style={[styles.textColor, styles.currentCondition]}>
                 {weatherData?.current.condition.text}
               </Text>
               <Text style={[styles.textColor, styles.minMaxTempText]}>
-                {weatherData?.forecast.forecastday[0].day.maxtemp_c}° /{" "}
-                {weatherData?.forecast.forecastday[0].day.mintemp_c}° Feels like{" "}
-                {weatherData?.current.feelslike_c}°
+                {settings.temperatureUnit === "fahrenheit"
+                  ? `${weatherData?.forecast.forecastday[0].day.maxtemp_f}° / ${weatherData?.forecast.forecastday[0].day.mintemp_f}°`
+                  : `${weatherData?.forecast.forecastday[0].day.maxtemp_c}° / ${weatherData?.forecast.forecastday[0].day.mintemp_c}°`}{" "}
+                Feels like{" "}
+                {settings.temperatureUnit === "fahrenheit"
+                  ? weatherData?.current.feelslike_f
+                  : weatherData?.current.feelslike_c}
+                °
               </Text>
             </View>
             <LottieView
