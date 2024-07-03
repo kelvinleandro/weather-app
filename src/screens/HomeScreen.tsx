@@ -22,6 +22,7 @@ import HourlyForecastList from "@/components/HourlyForecastList";
 import DailyForecastList from "@/components/DailyForecastList";
 import Loader from "@/components/Loader";
 import useSettings from "@/hooks/useSettings";
+import { getWeatherAnimation } from "@/utils/weatherAnimations";
 
 type Props = DrawerScreenProps<DrawerRouteParamList, "Home">;
 
@@ -172,7 +173,7 @@ const HomeScreen = ({ navigation, route }: Props) => {
               autoPlay
               loop
               style={styles.animation}
-              source={require("@/assets/day_sunny.json")}
+              source={getWeatherAnimation(weatherData?.current.condition.code as number, weatherData?.current.is_day as number)}
             />
           </View>
 

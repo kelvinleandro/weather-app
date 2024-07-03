@@ -75,7 +75,7 @@ export default CustomDrawerContent;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#5597e4",
+    backgroundColor: "#303968",
     gap: 12,
   },
   screenNavigationContainer: {
