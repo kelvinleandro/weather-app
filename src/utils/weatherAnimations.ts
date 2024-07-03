@@ -44,7 +44,7 @@ const weatherConditionMap: WeatherConditionMap = {
   1030: { common: "mist" }, // Mist
   1063: { common: "lightRain" }, // Patchy rain possible
   1066: { day: "snow", night: "snow" }, // Patchy snow possible
-  1069: { day: "snow", night: "snow" }, // Patchy sleet possible
+  1069: { common: "sleet" }, // Patchy sleet possible
   1072: { day: "snow", night: "snow" }, // Patchy freezing drizzle possible
   1087: { common: "thundery" }, // Thundery outbreaks possible
   1114: { day: "snow", night: "snow" }, // Blowing snow
@@ -63,8 +63,8 @@ const weatherConditionMap: WeatherConditionMap = {
   1195: { day: "rain", night: "rain" }, // Heavy rain
   1198: { common: "lightRain" }, // Light freezing rain
   1201: { day: "rain", night: "rain" }, // Moderate or heavy freezing rain
-  1204: { day: "snow", night: "snow" }, // Light sleet
-  1207: { day: "snow", night: "snow" }, // Moderate or heavy sleet
+  1204: { common: "sleet" }, // Light sleet
+  1207: { common: "sleet" }, // Moderate or heavy sleet
   1210: { day: "snow", night: "snow" }, // Patchy light snow
   1213: { day: "snow", night: "snow" }, // Light snow
   1216: { day: "snow", night: "snow" }, // Patchy moderate snow
@@ -75,7 +75,7 @@ const weatherConditionMap: WeatherConditionMap = {
   1240: { common: "lightRain" }, // Light rain shower
   1243: { day: "rain", night: "rain" }, // Moderate or heavy rain shower
   1246: { day: "rain", night: "rain" }, // Torrential rain shower
-  1249: { day: "snow", night: "snow" }, // Light sleet showers
+  1249: { common: "sleet" }, // Light sleet showers
   1252: { day: "snow", night: "snow" }, // Moderate or heavy sleet showers
   1255: { day: "snow", night: "snow" }, // Light snow showers
   1258: { day: "snow", night: "snow" }, // Moderate or heavy snow showers
