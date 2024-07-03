@@ -4,6 +4,8 @@ This Weather App is built using React Native, Expo, and TypeScript. It utilizes 
 
 ## Preview
 
+![preview](./assets/preview.png)
+
 ## Features
 
 - **Current Weather**: Users can view the current weather for their location using Expo Location.
@@ -15,6 +17,8 @@ This Weather App is built using React Native, Expo, and TypeScript. It utilizes 
 - **Dynamic Background**: The home screen background updates based on whether it's day or night in the selected city.
 
 - **Animated Weather Conditions**: The app uses Lottie animations to represent the current weather condition dynamically.
+
+- **Settings Screen**: Users can choose their preferred units, such as Celsius and Fahrenheit for temperature.
 
 ## Project Structure
 
