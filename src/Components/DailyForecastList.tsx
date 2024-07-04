@@ -37,7 +37,7 @@ const DailyForecastList = ({ data }: Props) => {
               <Text style={styles.textLight}>
                 {settings.temperatureUnit === "fahrenheit"
                   ? `${item.day.maxtemp_f}° / ${item.day.mintemp_f}°`
-                  : `${item.day.maxtemp_c}° / ${item.day.maxtemp_c}°`}
+                  : `${item.day.maxtemp_c}° / ${item.day.mintemp_c}°`}
               </Text>
             </View>
           </View>
