@@ -14,7 +14,6 @@ import Octicons from "@expo/vector-icons/Octicons";
 import LottieView from "lottie-react-native";
 
 import { DrawerRouteParamList } from "@/types/drawerRoute";
-import { Coordinate } from "@/types/geolocation";
 import { fetchForecast } from "@/api/weatherApi";
 import { useLocation } from "@/hooks/useLocation";
 import { ForecastResponse } from "@/types/weatherApi";
@@ -35,9 +34,6 @@ const HomeScreen = ({ navigation, route }: Props) => {
     favoriteLocations,
     toggleFavoriteLocation,
   } = useLocation();
-  // const [coordinate, setCoordinate] = useState<Coordinate | null>(
-  //   route.params?.coordinate || null
-  // );
   const [weatherData, setWeatherData] = useState<ForecastResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const moreWeatherInfo = useMemo(() => {
@@ -71,9 +67,6 @@ const HomeScreen = ({ navigation, route }: Props) => {
     if (route.params?.coordinate) {
       setActiveCoordinate(route.params.coordinate);
     }
-    // if (!route.params?.coordinate) {
-    //   setCoordinate(activeCoordinate);
-    // }
   }, [route.params?.coordinate, coordinate]);
 
   useEffect(() => {

@@ -13,7 +13,7 @@ export interface LocationContextType {
   deviceLocation: City | null;
   favoriteLocations: City[];
   toggleFavoriteLocation: (location: City) => void;
-  isFavorite: (location: City) => void;
+  isFavorite: (location: City) => boolean;
 }
 
 export const LocationContext = createContext<LocationContextType | undefined>(
