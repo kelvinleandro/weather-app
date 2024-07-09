@@ -2,7 +2,7 @@
 
 "Quintura" is built using React Native, Expo, and TypeScript. It utilizes the WeatherAPI to fetch weather data and Expo Location for accessing the user's current location. The app supports saving favorite locations, searching for cities by name or coordinates, and dynamically updates the home screen's background and animations based on the weather and time of day.
 
-## Preview
+## Preview (Google Pixel 7)
 
 ![preview](./assets/preview.png)
 
